@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  push:
+    branches: ['**']
+    tags: [v*]
+
+jobs:
+  build:
+    uses: Dwolla/jenkins-agents-workflow/.github/workflows/build-docker-image.yml@main
+    with:
+      IMAGE_NAME: dwolla/jenkins-agent-terraform
+      TAG_NAME: NVM_TAG
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  build-complete:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The build completed successfully"
